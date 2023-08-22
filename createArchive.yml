@@ -6,5 +6,6 @@
   - name: create archivo
     shell:
         cmd: |
+           cd /home/ubuntu/prueba/
            touch prueba.txt
            echo "Hello word" > prueba.txt
