@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: no
+  tasks:
+
+  - name: create archivo
+    shell:
+        cmd: |
+           touch prueba.txt
+           echo "Hello word" > prueba.txt
