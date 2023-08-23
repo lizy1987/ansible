@@ -1,11 +1,12 @@
 ---
 - hosts: all
-  become: no
+  become_user: oracle
+  become: yes
   tasks:
 
   - name: create archivo
     shell:
         cmd: |
-           cd /home/ubuntu/prueba/
+           cd /home/oracle/prueba/
            touch prueba.txt
            echo "Hello word" > prueba.txt
