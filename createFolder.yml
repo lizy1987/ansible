@@ -1,12 +1,13 @@
 ---
 - hosts: all
-  become: no
+  become_user: oracle
+  become: yes
   tasks:
 
   - name: create folder
     file:
-      path: /home/ubuntu/prueba
+      path: /home/oracle/prueba
       state: directory
-      owner: ubuntu
-      group: ubuntu
+      owner: oracle
+      group: oracle
       mode: 0775
