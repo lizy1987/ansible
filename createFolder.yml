@@ -10,4 +10,4 @@
       state: directory
       owner: oracle
       group: oinstall
-      mode: 0775
+      mode: 0755
