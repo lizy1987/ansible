@@ -9,5 +9,5 @@
       path: /home/oracle/prueba
       state: directory
       owner: oracle
-      group: oracle
+      group: oinstall
       mode: 0775
