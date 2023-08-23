@@ -1,0 +1,42 @@
+---
+- hosts: all
+  become_user: oracle
+  become: yes
+  tasks:
+
+  
+  - name: Execute Create DB User
+    shell:
+      cmd: |
+        touch /tmp/createuser.out
+        source /home/oracle/.bash_profile
+        sqlplus -S "/ as sysdba" << EOF        
+        spool /tmp/createuser.out
+        alter session set container = INSISDB;
+        create user {{db_username}} identified by {{db_password}};
+        grant create session to {{db_username}};
+        grant select any table to {{db_username}};
+        EOF
+        touch /tmp/createuser_{{db_username}}.done
+    args:
+      creates: /tmp/createuser_{{db_username}}.done
+
+  - name: Save output
+    command: cat /tmp/createuser.out
+    register: createuser_command_output
+
+  - name: Print to console
+    debug:
+      msg: "{{ createuser_command_output.stdout }}"
+  
+  - name: Remove .done control file
+    file:
+      path: /tmp/createuser_{{db_username}}.done
+      state: absent
+
+  - name: Remove .out control file
+    file:
+      path: /tmp/createuser.out
+      state: absent  
+  
+  
