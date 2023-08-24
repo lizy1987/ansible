@@ -21,7 +21,7 @@
         source /home/oracle/.bash_profile
         sqlplus -S "/ as sysdba" << EOF        
         spool /tmp/createuser.out
-        @/home/oracle/createuserdb.sql
+        @/home/oracle/crearUsuario.sql
         EOF
         touch /tmp/createuser_{{db_user}}.done
     args:
