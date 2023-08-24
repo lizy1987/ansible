@@ -4,6 +4,15 @@
   become: yes
   tasks:
 
+  - name: Copy SQL Create DB User Template
+    include_role:
+        name: copy-file
+    vars:
+      user_execution: oracle
+      mode_copy: 0644
+      source_template: crearUsuario.sql.j2
+      destination_template_path: /home/oracle/ 
+      destination_template: crearUsuario.sql
 
   - name: Execute Create DB User
     shell:
@@ -12,10 +21,7 @@
         source /home/oracle/.bash_profile
         sqlplus -S "/ as sysdba" << EOF        
         spool /tmp/createuser.out
-        alter session set container = INSISDB;
-        create user {{db_user}} identified by {{db_password}};
-        grant create session to {{db_user}};
-        grant select any table to {{db_user}};
+        @/home/oracle/createuserdb.sql
         EOF
         touch /tmp/createuser_{{db_user}}.done
     args:
