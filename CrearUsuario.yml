@@ -13,7 +13,7 @@
         sqlplus -S "/ as sysdba" << EOF        
         spool /tmp/createuser.out
         alter session set container = INSISDB;
-        create user {{USUARIO}} identified by {{PASSWORD}};
+        create user {{USUARIO}} identified by "{{PASSWORD}}";
         grant create session to {{USUARIO}};
         grant select any table to {{USUARIO}};
         EOF
