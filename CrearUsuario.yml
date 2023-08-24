@@ -13,13 +13,13 @@
         sqlplus -S "/ as sysdba" << EOF        
         spool /tmp/createuser.out
         alter session set container = INSISDB;
-        create user {{db_user}} identified by {{db_password}};
-        grant create session to {{db_user}};
-        grant select any table to {{db_user}};
+        create user {{USUARIO}} identified by {{PASSWORD}};
+        grant create session to {{USUARIO}};
+        grant select any table to {{USUARIO}};
         EOF
-        touch /tmp/createuser_{{db_user}}.done
+        touch /tmp/createuser_{{USUARIO}}.done
     args:
-      creates: /tmp/createuser_{{db_user}}.done
+      creates: /tmp/createuser_{{USUARIO}}.done
 
   - name: Save output
     command: cat /tmp/createuser.out
@@ -31,7 +31,7 @@
   
   - name: Remove .done control file
     file:
-      path: /tmp/createuser_{{db_user}}.done
+      path: /tmp/createuser_{{USUARIO}}.done
       state: absent
 
   - name: Remove .out control file
