@@ -3,7 +3,7 @@ pipeline{
     stages {
         stage('Set ambiente') {
             steps{
-                build job: "Host", wait: true
+                build job: "Host", wait: true , parameters: [string(name: '${AMBIENTE}', value:'PRUEBA2')]
             }    
             
         }
