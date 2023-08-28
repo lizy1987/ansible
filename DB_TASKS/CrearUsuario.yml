@@ -43,6 +43,11 @@
   - name: Remove .out control file
     file:
       path: /tmp/createuser.out
-      state: absent  
+      state: absent 
+
+  - name: Remove script control file
+    file:
+      path: /home/oracle/crearUsuario.sql
+      state: absent     
   
   
