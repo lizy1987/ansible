@@ -1,0 +1,12 @@
+---
+  - name: Create file from template
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ destination_template_path }}/{{ item.dest }}"
+      mode: "{{ mode_copy }}"
+      force: yes
+    with_items:      
+      - { src: "{{ source_template }}", dest: "{{ destination_template }}" }      
+    become_user: "{{ user_execution }}"
+    become: yes
+    
