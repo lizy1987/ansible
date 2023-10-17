@@ -1,17 +1,36 @@
-pipeline{
+pipeline {
     agent any
+
+    environment {
+        // Definir una variable de entorno "BRANCH_NAME" basada en la variable que viene de GitHub
+        BRANCH_NAME = "${env.BRANCH_NAME}"
+    }
+
     stages {
         stage('Set ambiente') {
             steps{
-                build job: "Host" , parameters: [string(name: 'AMBIENTE', value:'PRUEBA2')]
+                build job: "Host" , parameters: [string(name: 'AMBIENTE', value:'PRESIT')]
             }    
             
         }
-        stage('Crear-Usuario') {
-            steps{
-                ansiblePlaybook credentialsId: 'oracleDB', extras: '-e db_user=${USUARIO} -e db_password=${PASSWORD}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: '/var/lib/jenkins/workspace/Crear-Usuario-BD/DB_TASKS/CrearUsuario.yml'
-            }    
-            
+        
+        stage('Checkout') {
+            steps {
+                script {
+                    // Clonar el repositorio de GitHub y definir la variable de entorno "BRANCH_NAME"
+                    checkout([$class: 'GitSCM', branches: [[name: BRANCH_NAME]], userRemoteConfigs: [[url: 'https://github.com/tu-usuario/tu-repositorio.git']])
+
+                    // Imprimir el nombre de la rama para verificar
+                    echo "Nombre de la rama: ${BRANCH_NAME}"
+                }
+            }
         }
-   }
+
+        stage('Ejecutar Ansible Playbook') {
+            steps {
+                // Ejecutar el playbook de Ansible y pasar la variable "BRANCH_NAME"
+                sh "ansible-playbook -e branch=${BRANCH_NAME} tu-playbook.yml"
+            }
+        }
+    }
 }
