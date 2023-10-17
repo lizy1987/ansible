@@ -7,18 +7,11 @@ pipeline {
     }
 
     stages {
-        stage('Set ambiente') {
-            steps{
-                build job: "Host" , parameters: [string(name: 'AMBIENTE', value:'PRESIT')]
-            }    
-            
-        }
-        
         stage('Checkout') {
             steps {
                 script {
                     // Clonar el repositorio de GitHub y definir la variable de entorno "BRANCH_NAME"
-                    checkout([$class: 'GitSCM', branches: [[name: BRANCH_NAME]], userRemoteConfigs: [[url: 'https://github.com/tu-usuario/tu-repositorio.git']])
+                    checkout([$class: 'GitSCM', branches: [[name: BRANCH_NAME]], userRemoteConfigs: [[url: 'https://github.com/lizy1987/ansible.git']])
 
                     // Imprimir el nombre de la rama para verificar
                     echo "Nombre de la rama: ${BRANCH_NAME}"
@@ -26,11 +19,25 @@ pipeline {
             }
         }
 
-        stage('Ejecutar Ansible Playbook') {
-            steps {
-                // Ejecutar el playbook de Ansible y pasar la variable "BRANCH_NAME"
-                sh "ansible-playbook -e branch=${BRANCH_NAME} tu-playbook.yml"
-            }
+        stage('Set ambiente') {
+            steps{
+                build job: "Host" , parameters: [string(name: 'AMBIENTE', value:'PRESIT')]
+            }    
+            
+        }
+
+        stage('ClonGitRelease') {
+            steps{
+                ansiblePlaybook credentialsId: 'PRESIT', extras: '-e amb=${AMBIENTE} -e branch=${BRANCH_NAME} -e URLGIT=${BRANCH_NAME}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: '/var/lib/jenkins/workspace/Crear-Usuario-BD/DB_TASKS/CrearUsuario.yml'
+            }    
+            
+        }
+
+        stage('Execute Personalizaciones') {
+            steps{
+                ansiblePlaybook credentialsId: 'PRESIT', extras: '-e amb=${AMBIENTE} -e branch=${BRANCH_NAME}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: '/var/lib/jenkins/workspace/Crear-Usuario-BD/DB_TASKS/CrearUsuario.yml'
+            }    
+            
         }
     }
 }
