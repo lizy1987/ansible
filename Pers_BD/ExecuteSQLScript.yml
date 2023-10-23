@@ -1,0 +1,67 @@
+---
+- hosts: all
+  become_user: oracle
+  become: yes
+
+  tasks:
+  - name: Clean pers folder
+    file:
+      path: /home/oracle/pers/
+      state: absent
+        
+  - name: Create folder to pers
+    file:
+      path: "{{ item }}"
+      mode: "0777"
+      state: directory
+    with_items:
+      - "/home/oracle/pers/rollback"     
+    when:
+      - sql_pers is defined
+  
+  - name: copy DB files
+    copy:
+      src: '/INSIS_GITRelease/{{ branch }}/DB/{{ branch }}.tar'      
+      dest: '/home/oracle/pers/'
+      owner: oracle
+      mode: 0644
+      backup: yes
+      remote_src: no             
+    when:
+      - sql_pers is defined
+
+  - name: Unarchive a file that is already on the remote machine
+    unarchive:
+      src: /home/oracle/pers/{{ branch }}.tar
+      dest: /home/oracle/pers/
+      remote_src: yes   
+    when:
+      - sql_pers is defined                
+  
+  - name: execute sql
+    include_role:
+      name: bd-execute-sql
+      
+  - name: Display out contents
+    command: cat /home/oracle/salida_pers{{ branch }}.out
+    register: command_output
+    when:
+      - sql_pers is defined
+
+  - name: Print to console
+    debug:
+      msg: "{{command_output.stdout}}"
+    when:
+      - sql_pers is defined       
+  
+  - name: Display out contents
+    command: cat /home/oracle/salida{{ stepname }}.out
+    register: command_output2
+    when:
+      - sql_script is defined
+
+  - name: Print to console
+    debug:
+      msg: "{{command_output2.stdout}}"
+    when:
+      - sql_script is defined  

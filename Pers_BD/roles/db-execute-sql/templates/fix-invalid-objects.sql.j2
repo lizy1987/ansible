@@ -1,0 +1,6 @@
+begin
+for h in (select distinct(owner) as owner from dba_objects where status='INVALID' and owner like 'INSIS%') loop
+UTL_RECOMP.recomp_serial(h.owner);
+end loop;
+end;
+/

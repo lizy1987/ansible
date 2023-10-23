@@ -1,0 +1,80 @@
+---
+
+- name: Execute template
+  block:
+  - template:
+      src: "{{ sql_script }}.sql.j2"
+      dest: "/home/oracle/scripttmp.sql"
+      owner: oracle
+      mode: 0777
+    when: sql_script is defined
+
+  - name: show templating results
+    debug:
+      msg: "{{ lookup('template', './{{ sql_script }}.sql.j2') }}"
+    when: sql_script is defined
+    
+  - name: put sql into sqlfile
+    shell:
+      cmd: |
+        source /home/oracle/.bash_profile;
+        touch /home/oracle/scripttmp.sql
+        echo "" > /home/oracle/scripttmp.sql
+        touch /home/oracle/sql{{ stepname }}.done
+        echo "{{ rawquerysql1 }}"  >> /home/oracle/scripttmp.sql  
+    args:
+      creates: /home/oracle/sql{{ stepname }}.done
+    when: rawquerysql1 is defined
+
+  - name: lanza sql
+    shell: 
+      cmd: |              
+        touch /home/oracle/salida{{ stepname }}.out
+        echo "" > /home/oracle/salida{{ stepname }}.out 
+        touch /home/oracle/{{ stepname }}.done  
+        source /home/oracle/.bash_profile;
+        export NLS_LANG=AMERICAN_AMERICA.UTF8;           
+        sqlplus -S "{{ db_user }}/{{ db_password }}@{{ db_server }}:{{ db_port }}/{{ db_conn }}{{ roleconn }}" << EOF
+        spool /home/oracle/salida{{ stepname }}.out
+        SET SQLBLANKLINES on 
+        @/home/oracle/scripttmp.sql                                            
+        EOF      
+    args:
+      creates: /home/oracle/{{ stepname }}.done
+    when: sql_script is defined
+
+  - name: lanza sql personalizaciones
+    shell: 
+      cmd: |              
+        touch /home/oracle/salida_pers{{ branch }}.out
+        echo "" > /home/oracle/salida_pers{{ branch }}.out 
+        touch /home/oracle/pers{{ branch }}.done  
+        source /home/oracle/.bash_profile;
+        export NLS_LANG=AMERICAN_AMERICA.UTF8; 
+        cd /home/oracle/pers/         
+        sqlplus -S "{{ db_user }}/{{ db_password }}@{{ db_server }}:{{ db_port }}/{{ db_conn }}{{ roleconn }}" << EOF
+        spool /home/oracle/salida_pers{{ branch }}.out 
+        SET SQLBLANKLINES on
+        @/home/oracle/pers/master.sql                                            
+        EOF      
+    args:
+      creates: /home/oracle/pers{{ branch }}.done
+    when: sql_pers is defined
+
+  - name: lanza sql roolback
+    shell: 
+      cmd: |              
+        touch /home/oracle/salida_pers{{ branch }}.out
+        echo "" > /home/oracle/salida_pers{{ branch }}.out 
+        touch /home/oracle/pers{{ branch }}.done  
+        source /home/oracle/.bash_profile;
+        export NLS_LANG=AMERICAN_AMERICA.UTF8; 
+        cd /home/oracle/pers/rollback/;           
+        sqlplus -S "{{ db_user }}/{{ db_password }}@{{ db_server }}:{{ db_port }}/{{ db_conn }}{{ roleconn }}" << EOF
+        spool /home/oracle/salida_rollback{{ branch }}.out 
+        @/home/oracle/pers/rollback/master.sql                                            
+        EOF      
+    args:
+      creates: /home/oracle/pers{{ branch }}.done
+    when: sql_rollback is defined
+ 

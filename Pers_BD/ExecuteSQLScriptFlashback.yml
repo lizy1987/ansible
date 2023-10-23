@@ -1,0 +1,59 @@
+---
+- hosts: all
+  become_user: oracle
+  become: yes
+  vars:
+    stepname1: execute-shutdown
+    stepname2: execute-startup
+
+  tasks:  
+  - name: execute sql
+    include_role:
+      name: bd-execute-sql-root-container
+    vars:
+      sql_script: execute-shutdown
+      stepname: "{{ stepname1 }}"
+      
+  - name: Save output
+    command: cat /home/oracle/salida{{ stepname1 }}.out
+    register: output
+
+  - name: Print to console
+    debug:
+      msg: "{{ output.stdout }}"
+
+  - name: Remove .done control file
+    file:
+      path: /home/oracle/{{ stepname1 }}.done
+      state: absent
+
+  - name: Remove .out control file
+    file:
+      path: /home/oracle/salida{{ stepname1 }}.out
+      state: absent   
+
+  - name: execute sql as sys
+    include_role:
+      name: bd-execute-sql-root-container
+    vars:
+      sql_script: execute-startup
+      stepname: "{{ stepname2 }}"
+      startup: yes
+      
+  - name: Save output
+    command: cat /home/oracle/salida{{ stepname2 }}.out
+    register: output
+
+  - name: Print to console
+    debug:
+      msg: "{{ output.stdout }}"
+
+  - name: Remove .done control file
+    file:
+      path: /home/oracle/{{ stepname2 }}.done
+      state: absent
+
+  - name: Remove .out control file
+    file:
+      path: /home/oracle/salida{{ stepname2 }}.out
+      state: absent        
