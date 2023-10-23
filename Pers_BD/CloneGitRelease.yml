@@ -5,16 +5,16 @@
 
   tasks: 
   - name: Eliminar .tar
-    shell: find /INSIS_GITRelease/ -user root \( \-name '*.tar' \) -exec rm {} \;
+    shell: find /GITRelease/ -user root \( \-name '*.tar' \) -exec rm {} \;
 
   - name: Delete branch directory
     file:
-      path: /INSIS_GITRelease/{{ branch }}
+      path: /GITRelease/{{ branch }}
       state: absent
       
   - name: create folder
     file:
-      path: /INSIS_GITRelease/{{ branch }}
+      path: /GITRelease/{{ branch }}
       state: directory
       owner: root
       group: root
@@ -23,11 +23,11 @@
   - name: download branch in folder
     shell:
       cmd: |
-        cd /INSIS_GITRelease/{{ branch }}
-        git clone --branch release/{{ branch }} {{ URLGIT }} .
+        cd /GITRelease/{{ branch }}
+        git clone --branch release/{{ branch }} https://github.com/lizy1987/BD.git .
           
   - name: compress all the files in tar
     archive:
-      path: "/INSIS_GITRelease/{{ branch }}/DB/"
-      dest: /INSIS_GITRelease/{{ branch }}/DB/{{ branch }}.tar
+      path: "/GITRelease/{{ branch }}/DB/"
+      dest: /GITRelease/{{ branch }}/DB/{{ branch }}.tar
       format: tar      
