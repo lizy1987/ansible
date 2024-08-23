@@ -4,6 +4,7 @@ pipeline {
         // Definir una variable de entorno "BRANCH_NAME" basada en la variable que viene de GitHub
         ANSIBLE_REPO = 'https://github.com/lizy1987/ansible.git'
         ANSIBLE_BRANCH = 'main'
+        REPO_SQL = 'https://github.com/lizy1987/BD.git'
         
         
     }
@@ -32,14 +33,14 @@ pipeline {
 
         stage('ClonGitRelease') {
             steps{
-                ansiblePlaybook credentialsId: 'oracleDB', extras: '-e amb=${amb} -e branch=${BRANCH_NAME} -e URLGIT=${BRANCH_NAME}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: 'ansible-playbooks/Pers_BD/CloneGitRelease.yml'
+                ansiblePlaybook credentialsId: 'oracleDB', extras: '-e amb={params.amb} -e branch=${params.branch_name} -e URLGIT=${REPO_SQL}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: 'ansible-playbooks/Pers_BD/CloneGitRelease.yml'
             }    
             
         }
 
         stage('Execute Personalizaciones') {
             steps{
-                ansiblePlaybook credentialsId: 'oracleDB', extras: '-e amb=${amb} -e branch=${BRANCH_NAME}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: 'ansible-playbooks/Pers_BD/ExecuteSQLScript.yml'
+                ansiblePlaybook credentialsId: 'oracleDB', extras: '-e amb=${amb} -e branch=${params.branch_name}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: 'ansible-playbooks/Pers_BD/ExecuteSQLScript.yml'
             }    
             
         }
