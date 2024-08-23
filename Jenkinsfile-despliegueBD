@@ -21,21 +21,21 @@ pipeline {
         
         stage('Set ambiente') {
             steps{
-                build job: "Host" , parameters: [string(name: 'AMBIENTE', value:${AMBIENTE})]
+                build job: "Host" , parameters: [string(name: 'amb', value:${amb})]
             }    
             
         }
 
         stage('ClonGitRelease') {
             steps{
-                ansiblePlaybook credentialsId: 'oracleDB', extras: '-e amb=${AMBIENTE} -e branch=${BRANCH_NAME} -e URLGIT=${BRANCH_NAME}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: 'ansible-playbooks/Pers_BD/CloneGitRelease.yml'
+                ansiblePlaybook credentialsId: 'oracleDB', extras: '-e amb=${amb} -e branch=${BRANCH_NAME} -e URLGIT=${BRANCH_NAME}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: 'ansible-playbooks/Pers_BD/CloneGitRelease.yml'
             }    
             
         }
 
         stage('Execute Personalizaciones') {
             steps{
-                ansiblePlaybook credentialsId: 'oracleDB', extras: '-e amb=${AMBIENTE} -e branch=${BRANCH_NAME}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: 'ansible-playbooks/Pers_BD/ExecuteSQLScript.yml'
+                ansiblePlaybook credentialsId: 'oracleDB', extras: '-e amb=${amb} -e branch=${BRANCH_NAME}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: 'ansible-playbooks/Pers_BD/ExecuteSQLScript.yml'
             }    
             
         }
