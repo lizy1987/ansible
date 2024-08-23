@@ -23,7 +23,7 @@ pipeline {
         stage('Set ambiente') {
             steps{
                 echo "Ambiente: ${params.amb}"
-                echo "Branch: ${params.branch_name}"
+                echo "Branch_name: ${params.branch_name}"
 
                 build job: 'Host', parameters: [ string(name: 'AMBIENTE', value:${params.amb})]
             }    
