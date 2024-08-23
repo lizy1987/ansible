@@ -1,0 +1,80 @@
+pipeline {
+    agent any
+
+    environment {
+        ANSIBLE_REPO = 'https://github.com/usuario/ansible-playbooks.git'
+        ANSIBLE_BRANCH = 'main' // Rama para los playbooks de Ansible
+        SQL_REPO = 'https://github.com/usuario/sql-scripts.git'
+        SQL_BRANCH = 'nombre_de_la_rama' // Rama específica para los archivos SQL
+        AMBIENTE = '' // Esta variable se definirá más adelante
+    }
+
+    stages {
+        stage('Checkout Playbooks') {
+            steps {
+                // Clonar el repositorio de playbooks de Ansible en el workspace
+                sh """
+                    git clone -b ${ANSIBLE_BRANCH} ${ANSIBLE_REPO} ansible-playbooks
+                """
+                
+                echo "Playbooks descargados en el directorio ansible-playbooks/"
+            }
+        }
+
+        stage('Checkout SQL Scripts') {
+            steps {
+                // Clonar el repositorio de scripts SQL en el workspace
+                sh """
+                    git clone -b ${SQL_BRANCH} ${SQL_REPO} sql-scripts
+                """
+                
+                echo "Scripts SQL descargados en el directorio sql-scripts/"
+            }
+        }
+
+        stage('Set Ambiente') {
+            steps {
+                // Llamar a otro job de Jenkins para definir la variable de entorno AMBIENTE
+                script {
+                    def ambienteBuild = build job: "DefinirAmbiente", 
+                                        parameters: [string(name: 'BRANCH_NAME', value: "${SQL_BRANCH}")],
+                                        propagate: true,
+                                        wait: true
+
+                    // Capturar el valor del ambiente desde la salida del job invocado
+                    AMBIENTE = ambienteBuild.getEnvironment().get("AMBIENTE")
+                }
+                
+                echo "Ambiente definido: ${AMBIENTE}"
+            }
+        }
+
+        stage('Run Ansible Playbook') {
+            steps {
+                // Ejecutar un playbook de Ansible desde el directorio clonado
+                ansiblePlaybook credentialsId: 'oracleDB', extras: '-e amb=${AMBIENTE}', installation: 'ansible', inventory: '/etc/ansible/hosts', limit: 'BD', playbook: 'ansible-playbooks/playbook.yml'
+            }
+        }
+
+        stage('Run SQL Scripts') {
+            steps {
+                script {
+                    // Encontrar y ejecutar todos los archivos SQL en el directorio clonado
+                    def sqlFiles = findFiles(glob: 'sql-scripts/**/*.sql')
+                    for (file in sqlFiles) {
+                        sh """
+                            sqlplus ${ORACLE_USER}/${ORACLE_PASSWORD}@//${ORACLE_HOST}:${ORACLE_PORT}/${ORACLE_SID} @${file.path}
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Limpiar el workspace después de la ejecución
+            cleanWs()
+        }
+    }
+}
