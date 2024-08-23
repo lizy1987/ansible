@@ -25,7 +25,7 @@ pipeline {
                 echo "Ambiente: ${params.amb}"
                 echo "Branch: ${params._name}"
 
-                def jobResult = build job: 'Host', parameters: [ string(name: 'AMBIENTE', value:${params.amb})], wait: true, propagate: true
+                build job: 'Host', parameters: [ string(name: 'AMBIENTE', value:${params.amb})]
             }    
             
         }
