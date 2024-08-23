@@ -1,9 +1,8 @@
 pipeline {
     agent any
-
     environment {
         // Definir una variable de entorno "BRANCH_NAME" basada en la variable que viene de GitHub
-        ANSIBLE_REPO = 'https://github.com/lizy1987/BD.git'
+        ANSIBLE_REPO = 'https://github.com/lizy1987/ansible.git'
         ANSIBLE_BRANCH = 'main'
         
     }
