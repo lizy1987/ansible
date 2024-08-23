@@ -4,6 +4,8 @@ pipeline {
         // Definir una variable de entorno "BRANCH_NAME" basada en la variable que viene de GitHub
         ANSIBLE_REPO = 'https://github.com/lizy1987/ansible.git'
         ANSIBLE_BRANCH = 'main'
+        string(name: 'amb', defaultValue: 'default_value', description: 'Ambiente para el job')
+        string(name: 'branch', defaultValue: 'main', description: 'Branch del repositorio')
         
     }
 
@@ -21,7 +23,10 @@ pipeline {
         
         stage('Set ambiente') {
             steps{
-                build job: "Host" , parameters: [string(name: 'amb', value:${amb})]
+                echo "Ambiente: ${params.amb}"
+                echo "Branch: ${params._name}"
+
+                def jobResult = build job: 'Host', parameters: [ string(name: 'AMBIENTE', value:${params.amb})], wait: true, propagate: true
             }    
             
         }
