@@ -33,7 +33,7 @@ pipeline {
 
         stage('ClonGitRelease') {
             steps{
-                ansiblePlaybook credentialsId: 'oracleDB', extras: '-e amb=${params.amb} -e branch=${params.branch_name} -e URLGIT=${REPO_SQL}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: 'ansible-playbooks/Pers_BD/CloneGitRelease.yml'
+                ansiblePlaybook credentialsId: 'ubuJenkis', extras: '-e amb=${params.amb} -e branch=${params.branch_name} -e URLGIT=${REPO_SQL}', installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'JENKINS', playbook: 'ansible-playbooks/Pers_BD/CloneGitRelease.yml'
             }    
             
         }
