@@ -26,7 +26,7 @@ pipeline {
                 echo "Ambiente: ${params.amb}"
                 echo "Branch_name: ${params.branch_name}"
 
-                build job: 'Host', parameters: [string(name: 'AMBIENTE', value:'${params.amb}')]
+                build job: "Host" , parameters: [string(name: 'AMBIENTE', value:'${params.amb}')]
             }    
             
         }
