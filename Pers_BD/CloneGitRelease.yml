@@ -24,7 +24,7 @@
     shell:
       cmd: |
         cd /GITRelease/{{ branch }}
-        git clone --branch release/{{ branch }} https://github.com/lizy1987/BD.git .
+        git clone --branch release/{{ branch }} https://github.com/lizy1987/BD.git
           
   - name: compress all the files in tar
     archive:
