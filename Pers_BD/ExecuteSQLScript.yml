@@ -40,7 +40,7 @@
   
   - name: execute sql
     include_role:
-      name: bd-execute-sql
+      name: db-execute-sql
       
   - name: Display out contents
     command: cat /home/oracle/salida_pers{{ branch }}.out
