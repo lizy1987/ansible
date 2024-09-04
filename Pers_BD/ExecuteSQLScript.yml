@@ -21,7 +21,7 @@
   
   - name: copy DB files
     copy:
-      src: '/PRUEBA_GITRelease/{{ branch }}/DB/{{ branch }}.tar'      
+      src: '/GITRelease/{{ branch }}/DB/{{ branch }}.tar'      
       dest: '/home/oracle/pers/'
       owner: oracle
       mode: 0644
