@@ -45,11 +45,11 @@ pipeline {
             
         }
     }
-//    post {
-//        always {
-//            // Limpiar el workspace después de la ejecución
-//          cleanWs()
-//        }
-//    }
+    post {
+        always {
+           // Limpiar el workspace después de la ejecución
+          cleanWs()
+        }
+    }
 }
 
