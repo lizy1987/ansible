@@ -40,16 +40,16 @@ pipeline {
 
         stage('Execute Personalizaciones') {
             steps{
-                ansiblePlaybook credentialsId: 'oracleDB', extras: "-e amb=${amb} -e branch=${params.branch_name} -e sql_pers=yes -e @/ansible-playbooks/vars/${amb}.yml", installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: 'ansible-playbooks/Pers_BD/ExecuteSQLScript.yml'
+                ansiblePlaybook credentialsId: 'oracleDB', extras: "-e amb=${amb} -e branch=${params.branch_name} -e sql_pers=yes -e ansible-playbooks/vars/${amb}.yml", installation: 'ansible', inventory: '/etc/ansible/hosts',  limit: 'BD', playbook: 'ansible-playbooks/Pers_BD/ExecuteSQLScript.yml'
             }    
             
         }
     }
-    post {
-        always {
-            // Limpiar el workspace después de la ejecución
-            cleanWs()
-        }
-    }
+//    post {
+//        always {
+//            // Limpiar el workspace después de la ejecución
+//          cleanWs()
+//        }
+//    }
 }
 
