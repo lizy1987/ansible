@@ -34,7 +34,7 @@
         touch /home/oracle/{{ stepname }}.done  
         source /home/oracle/.bash_profile;
         export NLS_LANG=AMERICAN_AMERICA.UTF8;           
-        sqlplus -S "{{ db_user }}/{{ db_password }}@{{ db_server }}:{{ db_port }}/{{ db_conn }}{{ roleconn }}" << EOF
+        sqlplus -S "{{ db_user }}/{{ db_password }}@{{ db_server }}:{{ db_port }}/{{ db_conn }} {{ roleconn }}" << EOF
         spool /home/oracle/salida{{ stepname }}.out
         SET SQLBLANKLINES on 
         @/home/oracle/scripttmp.sql                                            

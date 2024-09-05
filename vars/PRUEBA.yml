@@ -10,7 +10,7 @@ dbport: 1521
 db_port: 1521
 db_user: sys
 db_password: 'Prueba123*'
-roleconn: sysdba
+roleconn: as sysdba
 db_conn: pdb.localdomain
 db_server: 192.168.1.81
 DATAPUMP_DIR: INSIS_DATAPUMP_DIR
