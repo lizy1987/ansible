@@ -1,16 +1,17 @@
-amb: PreSIT
+amb: PRUEBA
 adminPassword: 'SXq8fxMbrZMy2eNbvW53##'
 
 #Database Properties
 dbconn: INSISDB.surauysitpub2.surauysitvcn.oraclevcn.com
-db_conn: INSISDB.surauysitpub2.surauysitvcn.oraclevcn.com
 db_conn_root_container: DB0518_GRU188.surauysitpub2.surauysitvcn.oraclevcn.com
 listener_conn: INSISDB
 db_conn_string_full: insis.db:1521/INSISDB.surauysitpub2.surauysitvcn.oraclevcn.com
 dbport: 1521
 db_port: 1521
-dbserver: insis.db
-db_server: insis.db
-dbserver_ip: 10.3.5.81
+db_user: sys
+db_password: 'Prueba123*'
+roleconn: sysdba
+db_conn: pdb.localdomain
+db_server: 192.168.1.81
 DATAPUMP_DIR: INSIS_DATAPUMP_DIR
 database_name: DB0518_gru188
