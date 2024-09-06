@@ -24,10 +24,10 @@
     shell:
       cmd: |
         cd /GITRelease/{{ branch }}
-        git clone --branch release/{{ branch }} https://github.com/lizy1987/BD.git
+        git clone --branch release/{{ branch }} https://github.com/lizy1987/per_db.git
           
   - name: compress all the files in tar
     archive:
-      path: "/GITRelease/{{ branch }}/BD/DB/"
-      dest: /GITRelease/{{ branch }}/BD/DB/{{ branch }}.tar
+      path: "/GITRelease/{{ branch }}/DB/"
+      dest: /GITRelease/{{ branch }}/DB/{{ branch }}.tar
       format: tar      

@@ -4,7 +4,7 @@ pipeline {
         // Definir una variable de entorno "BRANCH_NAME" basada en la variable que viene de GitHub
         ANSIBLE_REPO = 'https://github.com/lizy1987/ansible.git'
         ANSIBLE_BRANCH = 'main'
-        REPO_SQL = 'https://github.com/lizy1987/BD.git'
+        REPO_SQL = 'https://github.com/lizy1987/per_db.git'
         
         
     }
