@@ -28,6 +28,6 @@
           
   - name: compress all the files in tar
     archive:
-      path: "/GITRelease/{{ branch }}/DB/"
-      dest: /GITRelease/{{ branch }}/DB/{{ branch }}.tar
+      path: "/GITRelease/{{ branch }}/per_db/DB/"
+      dest: /GITRelease/{{ branch }}/per_db/DB/{{ branch }}.tar
       format: tar      
