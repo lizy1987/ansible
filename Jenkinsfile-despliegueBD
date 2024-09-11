@@ -25,7 +25,7 @@ pipeline {
             steps{
                 echo "Ambiente: ${params.amb}"
                 echo "Branch_name: ${params.branch_name}"
-
+                // Se llama al job para definar las var del ambiente
                 build job: "Host" , parameters: [string(name: 'AMBIENTE', value:"${params.amb}")]
             }    
             
